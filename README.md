@@ -1,5 +1,7 @@
 # @grconrad/vscode-extension-feedback
 
+![CI](https://github.com/grconrad/vscode-extension-feedback/workflows/Node.js%20CI/badge.svg)
+
 Gather feedback from users of your VS Code extension, using an external form hosted on the web.
 
 Make a single API call from your extension's `activate` entry point.
