@@ -1,0 +1,47 @@
+{
+  "name": "@grconrad/vscode-extension-feedback",
+  "version": "0.0.1",
+  "description": "Timing based feedback gathering for VS Code extensions",
+  "keywords": [
+    "vscode",
+    "extension",
+    "feedback"
+  ],
+  "homepage": "https://github.com/grconrad/vscode-extension-feedback#readme",
+  "bugs": {
+    "url": "https://github.com/grconrad/vscode-extension-feedback/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grconrad/vscode-extension-feedback.git"
+  },
+  "license": "MIT",
+  "author": "Richard Conrad <grconrad@hotmail.com>",
+  "main": "lib/index",
+  "types": "lib/index",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc -b ./",
+    "clean": "rimraf lib",
+    "dev:all": "yarn && yarn clean && yarn lint && yarn build && yarn test",
+    "lint": "eslint -c .eslintrc 'src/**/*.ts' --ext js,ts",
+    "test": "tape test/*.js"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.21",
+    "@types/vscode": "^1.43.0",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
+    "esdoc": "^1.1.0",
+    "eslint": "^6.5.1",
+    "rimraf": "^3.0.0",
+    "tape": "^4.11.0",
+    "typescript": "^3.8.3"
+  },
+  "volta": {
+    "node": "12.13.0",
+    "yarn": "1.19.1"
+  }
+}
