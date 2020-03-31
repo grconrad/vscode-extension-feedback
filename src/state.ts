@@ -1,3 +1,7 @@
+/**
+ * State held in memory
+ */
+
 let feedbackCheckTimeoutId: NodeJS.Timeout | null = null;
 
 export function getFeedbackCheckTimeoutId(): NodeJS.Timeout | null {

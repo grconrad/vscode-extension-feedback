@@ -1,9 +1,9 @@
-// The brain of the feedback check mechanism
+/**
+ * The brain of the feedback checking mechanism
+ */
 
 import { IFeedbackContext, FeedbackCheckResult, IFeedbackOpts } from "./types";
-import {
-  setFeedbackCheckTimeoutId
-} from "./state";
+import { setFeedbackCheckTimeoutId } from "./state";
 import { KEY_LAST_FEEDBACK, KEY_DONT_ASK, KEY_FIRST_CHECKED, KEY_LAST_ASKED } from "./storage";
 import { askForFeedback } from "./prompt";
 
@@ -11,11 +11,8 @@ import { askForFeedback } from "./prompt";
  * Check whether anything needs to be done for feedback gathering. If it's appropriate to ask for
  * feedback, do that now. Then schedule the next feedback check, if appropriate.
  *
- * If user does not repond (or says "not now"), schedule next check and hang onto the timeout id.
- *
- * @param feedbackContext
- * @param opts Timing options
- * @internal
+ * If the user closes the prompt or clicks "Not now", schedule the next check and stash the timeout
+ * id.
  */
 export async function checkForFeedback(
   feedbackContext: IFeedbackContext,
@@ -58,11 +55,8 @@ export async function checkForFeedback(
  * This function is NOT responsible for scheduling the next feedback check (if any). It's only
  * responsible for performing a single check and handing the result back to the caller.
  *
- * @param feedbackContext
- * @param opts Timing options
  * @returns Result of the check, typically a reason why we didn't ask for feedback or the result
  *   from asking
- * @internal
  */
 async function checkNow(
   feedbackContext: IFeedbackContext,
@@ -120,7 +114,7 @@ async function checkNow(
 
     // Either we've never asked for feedback, or it was awhile ago.
     // Ask now.
-    let result: FeedbackCheckResult = await askForFeedback(feedbackContext, opts.feedbackFormUrl);
+    const result = await askForFeedback(feedbackContext, opts);
     memento.update(KEY_LAST_ASKED, now);
     if (result === FeedbackCheckResult.RESPONSE_DONT_ASK) {
       memento.update(KEY_DONT_ASK, true);

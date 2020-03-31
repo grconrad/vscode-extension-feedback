@@ -1,3 +1,7 @@
+/**
+ * Timings of feedback checks / prompts
+ */
+
 import { ITimings } from "./types";
 
 // Once per day, see if we need to do anything

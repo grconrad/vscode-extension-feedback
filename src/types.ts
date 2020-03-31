@@ -1,8 +1,11 @@
 import { Memento } from "vscode";
 
 export interface IFeedbackContext {
+  /* For logging */
   logFn: (text: string) => void;
-  memento: Memento;              // for persisting preferences and state related to feedback checks
+
+  /* For persisting state related to feedback checks */
+  memento: Memento;
 }
 
 export interface IFeedbackOpts {
@@ -16,10 +19,17 @@ export interface IFeedbackOpts {
 }
 
 export interface ILocalizedText {
-  promptText?:       string; // e.g. "Enjoying this extension? We'd love your feedback!"
-  giveFeedbackText?: string; // e.g. "Give feedback"
-  notNowText?:       string; // e.g. "Not now"
-  dontAskAgainText?: string; // e.g. "Don't ask again"
+  /* "Enjoying this extension? We'd love your feedback!" */
+  promptText?:       string;
+
+  /* "Give feedback" */
+  giveFeedbackText?: string;
+
+  /* "Not now" */
+  notNowText?:       string;
+
+  /* "Don't ask again" */
+  dontAskAgainText?: string;
 }
 
 export interface ITimings {

@@ -1,3 +1,8 @@
-node_modules
+# Dependencies
+node_modules/
 
-lib
+# Test coverage data
+coverage/
+
+# Build output
+lib/
