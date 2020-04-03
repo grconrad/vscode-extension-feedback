@@ -3,25 +3,44 @@
  *
  * This module imports "vscode" API surface so that other modules don't have to.
  *
- * This keeps our dependency on "vscode" to the topmost level in the module dependency graph. It
- * allows other modules to be unit tested, with test logic supplying mock implementations.
+ * It passes down the parts of "vscode" used by this library to other modules, representing them
+ * to tsc using our own internal types.
+ *
+ * By limiting our dependency on "vscode" to the topmost level in the module dependency graph, we
+ * allow other modules to be unit tested, with test logic supplying mock implementations of our
+ * types to simulate what "vscode" APIs would provide.
+ *
+ * Let's see how deep this rabbit hole goes... ;-)
  */
 
-import { Memento } from "vscode";
+import { env, window, Uri } from "vscode";
 
-import { ALL_KEYS as storageKeys } from "./storage";
+import { IFeedbackContext, IFeedbackOpts, IDisposableLike, IOpenExternalFeedbackForm, IScheduleFeedbackChecksApi } from "./types";
 
-export { scheduleFeedbackChecks } from "./scheduler";
+// Expected API
+import { scheduleFeedbackChecks as _scheduleFeedbackChecks } from "./scheduler";
+export function scheduleFeedbackChecks(
+  feedbackContext: IFeedbackContext,
+  opts: IFeedbackOpts,
+): Promise<IDisposableLike> {
+  const vscodeApi: IScheduleFeedbackChecksApi = {
+    windowShowInformationMessage: window.showInformationMessage,
+    openExternalFeedbackForm
+  };
+  return _scheduleFeedbackChecks(vscodeApi, feedbackContext, opts);
+}
 
 /**
- * Clear persisted state.
+ * Implement this here because there's not much that could be unit tested anyway.
  *
- * This should not be called under most circumstances, but could come in handy in rare situations
- * e.g. when an extension's author publishes a major version upgrade and wants to wipe the slate
- * clean and prompt again for feedback following installation.
+ * @param feedbackFormUrl
  */
-export function clearStorage(memento: Memento): void {
-  storageKeys.forEach(key => {
-    memento.update(key, undefined);
-  });
+export const openExternalFeedbackForm: IOpenExternalFeedbackForm =
+  async function(feedbackFormUrl: string): Promise<boolean>
+{
+  const successful = await env.openExternal(Uri.parse(feedbackFormUrl));
+  return successful;
 }
+
+// To support upgrade scenarios or authors choosing to ignore prior feedback history
+export { clearStorage } from "./state";

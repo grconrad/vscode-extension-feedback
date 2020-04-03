@@ -53,7 +53,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
 ## Notes
 
-**Timings** to control the feedback checking are also customizable. By default:
+**Timings** to control the feedback checking are customizable. By default:
 
 - Checking occurs once per day
 - The _first_ prompt occurs 7 days after the extension first begins its scheduled feedback checking
@@ -63,17 +63,13 @@ The time of the last prompt, and information about whether the user has provided
 "Don't ask again", are persisted to disk using context.globalState so that they can survive reboots
 of VS Code.
 
-**Text** in the prompts is also customizable. By default:
+**Text** in the prompts is customizable. By default:
 
 - The prompt is "Enjoying this extension? We'd love your feedback!"
 - Choices (buttons) from left to right are: "Give feedback", "Not now" and "Don't ask again"
 
-## Customizations
-
 The second parameter to `scheduleFeedbackChecks` is an object where you can specify timings, if
-you're unhappy with the defaults.
-
-Example of overriding the defaults:
+you're unhappy with the defaults:
 
 ```js
   scheduleFeedbackChecks(
@@ -85,12 +81,13 @@ Example of overriding the defaults:
     },
     {
       feedbackFormUrl,
-      // All times are in milliseconds
+      // Override default timings (fast enough for manual testing)
       timings: {
         checkInterval: 15 * 1000,    // 15 seconds
         firstAskInterval: 60 * 1000, // 1 minute
         reminderInterval: 30 * 1000, // 30 seconds
       },
+      // Override default text
       localizedText: {
         promptText: "Liking this extension?",
         giveFeedbackText: "Tell us",

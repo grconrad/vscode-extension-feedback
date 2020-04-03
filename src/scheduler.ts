@@ -2,10 +2,8 @@
  * Scheduling and unscheduling (cancellation) of feedback checks
  */
 
-import { Disposable } from "vscode";
-
-import { getFeedbackCheckTimeoutId, setFeedbackCheckTimeoutId } from "./state";
-import { IFeedbackContext, IFeedbackOpts } from "./types";
+import { IFeedbackContext, IFeedbackOpts, IDisposableLike, IScheduleFeedbackChecksApi } from "./types";
+import { initState, getFeedbackCheckTimeoutId, setFeedbackCheckTimeoutId } from "./state";
 import { defaultTimings } from "./timings";
 import { defaultText } from "./l10n";
 import { checkForFeedback } from "./checker";
@@ -14,13 +12,15 @@ import { checkForFeedback } from "./checker";
  * Initiate feedback checking.
  */
 export async function scheduleFeedbackChecks(
+  vscodeApi: IScheduleFeedbackChecksApi,
   feedbackContext: IFeedbackContext,
-  opts: IFeedbackOpts
-): Promise<Disposable> {
+  opts: IFeedbackOpts,
+): Promise<IDisposableLike> {
+
+  initState(feedbackContext.memento);
 
   // Just to be defensive, make sure this hasn't been called before.
-  const feedbackCheckTimeoutId = getFeedbackCheckTimeoutId();
-  if (feedbackCheckTimeoutId !== null) {
+  if (getFeedbackCheckTimeoutId() !== null) {
     throw "scheduleFeedbackChecks called twice";
   }
 
@@ -31,7 +31,7 @@ export async function scheduleFeedbackChecks(
   opts.localizedText = Object.assign(defaultText, opts.localizedText || {});
 
   // Start the checking sequence.
-  await checkForFeedback(feedbackContext, opts);
+  await checkForFeedback(vscodeApi, feedbackContext, opts);
 
   // Return a disposable.
   return {
@@ -45,7 +45,7 @@ export async function scheduleFeedbackChecks(
  * Cancel any pending (scheduled) feedback check.
  */
 function unscheduleFeedbackChecks(): void {
-  let feedbackCheckTimeoutId = getFeedbackCheckTimeoutId();
+  const feedbackCheckTimeoutId = getFeedbackCheckTimeoutId();
   if (feedbackCheckTimeoutId !== null) {
     clearTimeout(feedbackCheckTimeoutId);
     setFeedbackCheckTimeoutId(null);

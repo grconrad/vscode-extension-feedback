@@ -1,5 +1,24 @@
 import { Memento } from "vscode";
 
+export interface IScheduleFeedbackChecksApi {
+  windowShowInformationMessage: IShowInformationMessageLike,
+  openExternalFeedbackForm: IOpenExternalFeedbackForm
+}
+
+// Support mocking vscode.window.showInformationMessage
+export interface IShowInformationMessageLike {
+  (message: string, ...items: string[]): Thenable<string | undefined>;
+  (message: string, options: any, ...items: string[]): Thenable<string | undefined>;
+  // (message: string, ...items: string[]): Thenable<string | undefined>;
+}
+export interface IOpenExternalFeedbackForm {
+  (feedbackFormUrl: string): Promise<boolean>;
+}
+
+export interface IDisposableLike {
+  dispose(): void;
+}
+
 export interface IFeedbackContext {
   /* For logging */
   logFn: (text: string) => void;
@@ -12,38 +31,38 @@ export interface IFeedbackOpts {
   /* External survey form */
   feedbackFormUrl: string;
 
-  timings?: ITimings;
+  timings?: Partial<ITimings>;
 
   /* Text for prompt and buttons */
-  localizedText?: ILocalizedText;
+  localizedText?: Partial<ILocalizedText>;
 }
 
 export interface ILocalizedText {
   /* "Enjoying this extension? We'd love your feedback!" */
-  promptText?:       string;
+  promptText: string;
 
   /* "Give feedback" */
-  giveFeedbackText?: string;
+  giveFeedbackText: string;
 
   /* "Not now" */
-  notNowText?:       string;
+  notNowText: string;
 
   /* "Don't ask again" */
-  dontAskAgainText?: string;
+  dontAskAgainText: string;
 }
 
 export interface ITimings {
   /** Minimum time to wait (milliseconds) before checking feedback status */
-  checkInterval?: number;
+  checkInterval: number;
 
   /**
    * Minimum time to wait (milliseconds) before we first ask for feedback.
    * This gives the user a chance to use the extension before forming an opinion about it.
    */
-  firstAskInterval?: number;
+  firstAskInterval: number;
 
   /** Minimum time to wait (milliseconds) before asking again for feedback. */
-  reminderInterval?: number;
+  reminderInterval: number;
 }
 
 export enum FeedbackCheckResult {

@@ -2,22 +2,20 @@
  * Ask the user for feedback
  */
 
-import { window } from "vscode";
-
-import { FeedbackCheckResult, IFeedbackContext, IFeedbackOpts } from "./types";
-import { openExternalFeedbackForm } from "./commands";
+import { FeedbackCheckResult, IFeedbackContext, IFeedbackOpts, IScheduleFeedbackChecksApi } from "./types";
 
 /**
  * Prompt user for feedback using an info message.
  */
 export async function askForFeedback(
+  vscodeApi: IScheduleFeedbackChecksApi,
   feedbackContext: IFeedbackContext,
-  opts: IFeedbackOpts
+  opts: IFeedbackOpts,
 ): Promise<FeedbackCheckResult> {
 
   const {promptText, giveFeedbackText, notNowText, dontAskAgainText} = opts.localizedText!;
 
-  const buttonClicked = await window.showInformationMessage(
+  const buttonClicked = await vscodeApi.windowShowInformationMessage(
     promptText!,
     giveFeedbackText!,
     notNowText!,
@@ -27,7 +25,7 @@ export async function askForFeedback(
   if (buttonClicked === dontAskAgainText) {
     return FeedbackCheckResult.RESPONSE_DONT_ASK;
   } else if (buttonClicked === giveFeedbackText) {
-    const openedSurvey = await openExternalFeedbackForm(opts.feedbackFormUrl);
+    const openedSurvey = await vscodeApi.openExternalFeedbackForm(opts.feedbackFormUrl);
     // If there was some problem opening the survey, log it.
     // And treat this as if the user hadn't responded, since we never got feedback.
     if (!openedSurvey) {

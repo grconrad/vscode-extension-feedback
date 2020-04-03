@@ -1,10 +1,21 @@
 /**
  * The brain of the feedback checking mechanism
+ *
+ * Refactored to support unit tests
  */
 
-import { IFeedbackContext, FeedbackCheckResult, IFeedbackOpts } from "./types";
-import { setFeedbackCheckTimeoutId } from "./state";
-import { KEY_LAST_FEEDBACK, KEY_DONT_ASK, KEY_FIRST_CHECKED, KEY_LAST_ASKED } from "./storage";
+import { IFeedbackContext, FeedbackCheckResult, IFeedbackOpts, IScheduleFeedbackChecksApi } from "./types";
+import {
+  getDontAsk,
+  getFirstCheckedTime,
+  getLastAskedTime,
+  getLastFeedbackTime,
+  setFeedbackCheckTimeoutId,
+  updateDontAsk,
+  updateFirstCheckedTime,
+  updateLastAskedTime,
+  updateLastFeedbackTime,
+} from "./state";
 import { askForFeedback } from "./prompt";
 
 /**
@@ -15,13 +26,14 @@ import { askForFeedback } from "./prompt";
  * id.
  */
 export async function checkForFeedback(
+  vscodeApi: IScheduleFeedbackChecksApi,
   feedbackContext: IFeedbackContext,
   opts: IFeedbackOpts,
 ): Promise<void> {
 
   const logFn = feedbackContext.logFn;
 
-  const result: FeedbackCheckResult = await checkNow(feedbackContext, opts);
+  const result: FeedbackCheckResult = await checkNow(vscodeApi, feedbackContext, opts);
   logFn(`Result of feedback check: ${result}`);
 
   switch (result) {
@@ -41,7 +53,7 @@ export async function checkForFeedback(
   const checkInterval = opts.timings!.checkInterval!;
   logFn(`Next feedback check scheduled for ${new Date(Date.now() + checkInterval).toISOString()}`);
   const feedbackCheckTimeoutId = setTimeout(() => {
-    checkForFeedback(feedbackContext, opts);
+    checkForFeedback(vscodeApi, feedbackContext, opts);
   }, checkInterval);
   // Hang onto timeout id.
   setFeedbackCheckTimeoutId(feedbackCheckTimeoutId);
@@ -58,55 +70,56 @@ export async function checkForFeedback(
  * @returns Result of the check, typically a reason why we didn't ask for feedback or the result
  *   from asking
  */
-async function checkNow(
+export async function checkNow(
+  vscodeApi: IScheduleFeedbackChecksApi,
   feedbackContext: IFeedbackContext,
   opts: IFeedbackOpts
 ): Promise<FeedbackCheckResult> {
 
-  const {memento, logFn} = feedbackContext;
+  const {logFn} = feedbackContext;
 
   try {
 
     // Read persisted state.
 
     // If user has already provided feedback, don't ask anymore.
-    if (memento.get<number>(KEY_LAST_FEEDBACK) !== undefined) {
+    if (getLastFeedbackTime() !== undefined) {
       logFn("Skipping feedback prompt (feedback already provided)");
       return FeedbackCheckResult.ALREADY_RESPONDED;
     }
 
     // If user has said "don't ask again", respect that.
-    if (memento.get<boolean>(KEY_DONT_ASK, false)) {
+    if (getDontAsk()) {
       logFn("Skipping feedback prompt (user doesn't want to be asked again)");
       return FeedbackCheckResult.WONT_ASK;
     }
 
-    const now = Date.now();
+    const checkTime = Date.now();
 
     // Have we ever run the feedback check?
-    const firstCheckedTime = memento.get<number>(KEY_FIRST_CHECKED);
+    const firstCheckedTime = getFirstCheckedTime();
 
     // If we've never asked, don't ask now. This is the first time the feedback check is running,
     // and probably the first time the extension is running. The user hasn't had enough time to use
     // it and form an opinion.
     if (firstCheckedTime === undefined) {
-      memento.update(KEY_FIRST_CHECKED, now);
+      updateFirstCheckedTime(checkTime);
       logFn("Skipping feedback prompt (too soon for first ask)");
       return FeedbackCheckResult.TOO_SOON;
     }
 
     // We've run a check before, but might or might not have actually asked for feedback.
 
-    const lastAskedTime = memento.get<number>(KEY_LAST_ASKED);
+    const lastAskedTime = getLastAskedTime();
     const { firstAskInterval, reminderInterval } = opts.timings!;
 
-    if (lastAskedTime === undefined && ((now - firstCheckedTime) < firstAskInterval!)) {
+    if (lastAskedTime === undefined && ((checkTime - firstCheckedTime) < firstAskInterval!)) {
       // We've never asked for feedback, but it's too soon for the first ask.
       logFn("Skipping feedback prompt (too soon for first ask)");
       return FeedbackCheckResult.TOO_SOON;
     }
 
-    if (lastAskedTime !== undefined && ((now - lastAskedTime) < reminderInterval!)) {
+    if (lastAskedTime !== undefined && ((checkTime - lastAskedTime) < reminderInterval!)) {
       // We've asked for feedback before, but it's too soon for a reminder.
       logFn("Skipping feedback prompt (too soon for reminder)");
       return FeedbackCheckResult.TOO_SOON;
@@ -114,12 +127,12 @@ async function checkNow(
 
     // Either we've never asked for feedback, or it was awhile ago.
     // Ask now.
-    const result = await askForFeedback(feedbackContext, opts);
-    memento.update(KEY_LAST_ASKED, now);
+    updateLastAskedTime(Date.now());
+    const result = await askForFeedback(vscodeApi, feedbackContext, opts);
     if (result === FeedbackCheckResult.RESPONSE_DONT_ASK) {
-      memento.update(KEY_DONT_ASK, true);
+      updateDontAsk(true);
     } else if (result === FeedbackCheckResult.RESPONSE_FEEDBACK) {
-      memento.update(KEY_LAST_FEEDBACK, Date.now());
+      updateLastFeedbackTime(Date.now());
     }
     return result;
   }
