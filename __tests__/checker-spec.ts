@@ -133,8 +133,6 @@ async function mockAskWithDontAskAgain(_message: string, ..._items: string[]): P
   return defaultText.dontAskAgainText;
 }
 
-// TODO: Configure setting to whitelist domain of test form URL?
-
 test("No previous feedback checks, should skip it", async () => {
   clearState();
   const memento = new DueForFirstCheckMemento();

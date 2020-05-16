@@ -5,6 +5,8 @@
 
 Gather feedback from users of your VS Code extension, using an external form hosted on the web.
 
+![Prompt](./assets/prompt.png)
+
 Make a single API call from your extension's `activate` entry point.
 
 Control the timing and text of the feedback prompts.
