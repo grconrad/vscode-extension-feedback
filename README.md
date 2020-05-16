@@ -37,7 +37,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     {
       memento: context.globalState,
       logFn: (text: string) => {
-        outputChannel.appendLine(text);
+        channel.appendLine(text);
       }
     },
     {
@@ -78,7 +78,7 @@ you're unhappy with the defaults:
     {
       memento: context.globalState,
       logFn: (text: string) => {
-        outputChannel.appendLine(text);
+        channel.appendLine(text);
       }
     },
     {
