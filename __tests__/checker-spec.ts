@@ -15,7 +15,7 @@ const TEST_FEEDBACK_FORM_URL = "http://www.google.com";
 const testOpts: IFeedbackOpts = {
   feedbackFormUrl: TEST_FEEDBACK_FORM_URL,
   timings: SHORT_TIMINGS,
-  localizedText: defaultText
+  localizedText: defaultText,
 };
 
 // Mock storage service by implementing Memento interface, similar to how class ExtensionMemento
@@ -24,10 +24,13 @@ const testOpts: IFeedbackOpts = {
 
 // Simulating new install of extension where no data exists because feedback checking has never run
 class MockMemento {
-  constructor(private obj: {[key: string]: any} = {}) {}
-	get<T>(key: string): T | undefined;
-	get<T>(key: string, defaultValue: T): T;
-	get<T>(key: string, _defaultValue?: T): T {
+  constructor(private obj: { [key: string]: any } = {}) {}
+  keys(): readonly string[] {
+    return Object.keys(this.obj);
+  }
+  get<T>(key: string): T | undefined;
+  get<T>(key: string, defaultValue: T): T;
+  get<T>(key: string, _defaultValue?: T): T {
     return this.obj[key];
   }
   async update(key: string, value: any): Promise<void> {
@@ -108,27 +111,39 @@ class AnnoyedUserMemento extends MockMemento {
       "feedback.firstCheckedTime": now - 24 * 60 * 60 * 1000, // 1 day ago
       "feedback.lastAskedTime": now - SHORT_TIMINGS.reminderInterval,
       // No "feedback.lastFeedbackTime"
-      "feedback.dontAskAgain": true
+      "feedback.dontAskAgain": true,
     });
   }
 }
 
-async function mockAskWithDismissal(_message: string, ..._items: string[]): Promise<string | undefined> {
+async function mockAskWithDismissal(
+  _message: string,
+  ..._items: string[]
+): Promise<string | undefined> {
   // As if user just closed the info message without clicking any button
   return undefined;
 }
 
-async function mockAskWithFeedback(_message: string, ..._items: string[]): Promise<string | undefined> {
+async function mockAskWithFeedback(
+  _message: string,
+  ..._items: string[]
+): Promise<string | undefined> {
   // As if user clicked "Give feedback" to open the external survey form
   return defaultText.giveFeedbackText;
 }
 
-async function mockAskWithNotNow(_message: string, ..._items: string[]): Promise<string | undefined> {
+async function mockAskWithNotNow(
+  _message: string,
+  ..._items: string[]
+): Promise<string | undefined> {
   // As if user clicked "Not now"
   return defaultText.notNowText;
 }
 
-async function mockAskWithDontAskAgain(_message: string, ..._items: string[]): Promise<string | undefined> {
+async function mockAskWithDontAskAgain(
+  _message: string,
+  ..._items: string[]
+): Promise<string | undefined> {
   // As if user clicked "Don't ask again"
   return defaultText.dontAskAgainText;
 }
