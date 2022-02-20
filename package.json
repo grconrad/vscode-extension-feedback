@@ -34,7 +34,7 @@
     "preset": "ts-jest"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.0",
+    "@types/jest": "^27.4.0",
     "@types/node": "^17.0.18",
     "@types/vscode": "^1.43.0",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
