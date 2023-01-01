@@ -1,6 +1,6 @@
 {
   "name": "@grconrad/vscode-extension-feedback",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "Timing based feedback gathering for VS Code extensions",
   "keywords": [
     "vscode",
