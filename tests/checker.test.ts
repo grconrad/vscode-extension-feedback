@@ -1,3 +1,5 @@
+import { expect, test, vi } from "vitest";
+
 import { checkNow } from "../src/checker";
 import { ITimings, FeedbackCheckResult, IFeedbackOpts } from "../src/types";
 import { defaultText } from "../src/l10n";
@@ -152,7 +154,7 @@ test("No previous feedback checks, should skip it", async () => {
   clearState();
   const memento = new DueForFirstCheckMemento();
   initState(memento);
-  const mockPrompt = jest.fn(mockAskWithDismissal);
+  const mockPrompt = vi.fn(mockAskWithDismissal);
   const result = await checkNow(
     {
       openExternalFeedbackForm: async () => true,
@@ -172,7 +174,7 @@ test("Time for first ask, user ignores it", async () => {
   clearState();
   const memento = new DueForFirstAskMemento();
   initState(memento);
-  const mockPrompt = jest.fn(mockAskWithDismissal);
+  const mockPrompt = vi.fn(mockAskWithDismissal);
   const result = await checkNow(
     {
       openExternalFeedbackForm: async () => true,
@@ -192,7 +194,7 @@ test("Too soon for reminder, should skip it", async () => {
   clearState();
   const memento = new TooSoonForReminderMemento();
   initState(memento);
-  const mockPrompt = jest.fn(mockAskWithDismissal);
+  const mockPrompt = vi.fn(mockAskWithDismissal);
   const result = await checkNow(
     {
       openExternalFeedbackForm: async () => true,
@@ -212,7 +214,7 @@ test("Time for reminder, user ignores it", async () => {
   clearState();
   const memento = new DueForReminderMemento();
   initState(memento);
-  const mockPrompt = jest.fn(mockAskWithNotNow);
+  const mockPrompt = vi.fn(mockAskWithNotNow);
   const result = await checkNow(
     {
       openExternalFeedbackForm: async () => true,
@@ -232,7 +234,7 @@ test("Time for reminder, user gives feedback", async () => {
   clearState();
   const memento = new DueForReminderMemento();
   initState(memento);
-  const mockPrompt = jest.fn(mockAskWithFeedback);
+  const mockPrompt = vi.fn(mockAskWithFeedback);
   const result = await checkNow(
     {
       openExternalFeedbackForm: async () => true,
@@ -252,7 +254,7 @@ test("Time for reminder, user asks not to be asked again", async () => {
   clearState();
   const memento = new DueForReminderMemento();
   initState(memento);
-  const mockPrompt = jest.fn(mockAskWithDontAskAgain);
+  const mockPrompt = vi.fn(mockAskWithDontAskAgain);
   const result = await checkNow(
     {
       openExternalFeedbackForm: async () => true,
@@ -272,7 +274,7 @@ test("User has already given feedback", async () => {
   clearState();
   const memento = new FeedbackAlreadyGivenMemento();
   initState(memento);
-  const mockPrompt = jest.fn(mockAskWithDismissal);
+  const mockPrompt = vi.fn(mockAskWithDismissal);
   const result = await checkNow(
     {
       openExternalFeedbackForm: async () => true,
@@ -292,7 +294,7 @@ test("User has said not to ask again", async () => {
   clearState();
   const memento = new AnnoyedUserMemento();
   initState(memento);
-  const mockPrompt = jest.fn(mockAskWithDismissal);
+  const mockPrompt = vi.fn(mockAskWithDismissal);
   const result = await checkNow(
     {
       openExternalFeedbackForm: async () => true,
