@@ -13,7 +13,7 @@
  * and also write to disk for fields persisted on disk.
  */
 
-import { Memento } from "vscode";
+import type { Memento } from "vscode";
 
 // Unified model
 
@@ -33,8 +33,7 @@ interface IPersistedState {
   dontAskAgain: boolean;
 }
 
-export interface IState extends IInMemoryState, IPersistedState {
-}
+export interface IState extends IInMemoryState, IPersistedState {}
 
 let state: IState | null = null;
 
@@ -49,7 +48,7 @@ export function initState(memento: Memento): void {
     state = {
       memento,
       feedbackCheckTimeoutId: null,
-      ...initPersistedState(memento)
+      ...initPersistedState(memento),
     };
     // console.log('initState: state=', state);
   }
@@ -58,8 +57,12 @@ export function initState(memento: Memento): void {
 /**
  * Update a value in memory, and optionally persist it as well.
  */
-function update(fieldName: keyof IState, value: any, storageKey?: StorageKey): void {
-  updateInMemory({[fieldName]: value});
+function update(
+  fieldName: keyof IState,
+  value: any,
+  storageKey?: StorageKey
+): void {
+  updateInMemory({ [fieldName]: value });
   if (storageKey) {
     state!.memento.update(storageKey, value);
   }
@@ -72,7 +75,7 @@ function update(fieldName: keyof IState, value: any, storageKey?: StorageKey): v
 function updateInMemory(newState: Partial<IState>): void {
   state = {
     ...state!,
-    ...newState
+    ...newState,
   };
 }
 
@@ -84,7 +87,9 @@ export function getFeedbackCheckTimeoutId(): NodeJS.Timeout | null {
   return state!.feedbackCheckTimeoutId;
 }
 
-export function setFeedbackCheckTimeoutId(timeoutId: NodeJS.Timeout | null): void {
+export function setFeedbackCheckTimeoutId(
+  timeoutId: NodeJS.Timeout | null
+): void {
   update("feedbackCheckTimeoutId", timeoutId);
 }
 
@@ -153,7 +158,7 @@ export function updateDontAsk(b: boolean): void {
  */
 export function clearStorage(memento: Memento): void {
   // Write to disk
-  Object.values(StorageKey).forEach(key => {
+  Object.values(StorageKey).forEach((key) => {
     memento.update(key, undefined);
   });
   if (state?.memento === memento) {
@@ -161,7 +166,7 @@ export function clearStorage(memento: Memento): void {
     // Overwrite what's in memory
     state = {
       ...state,
-      ...initPersistedState(memento)
+      ...initPersistedState(memento),
     };
   }
 }

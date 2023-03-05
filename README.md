@@ -23,7 +23,8 @@ Example where the feedback survey is specified in an extension's package.json `f
 field:
 
 ```js
-import { window, Disposable, ExtensionContext, OutputChannel } from "vscode";
+import type { ExtensionContext, OutputChannel } from "vscode";
+import { window, Disposable } from "vscode";
 
 import { scheduleFeedbackChecks } from "@grconrad/vscode-extension-feedback";
 

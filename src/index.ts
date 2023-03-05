@@ -15,17 +15,23 @@
 
 import { env, window, Uri } from "vscode";
 
-import { IFeedbackContext, IFeedbackOpts, IDisposableLike, IOpenExternalFeedbackForm, IScheduleFeedbackChecksApi } from "./types";
+import type {
+  IFeedbackContext,
+  IFeedbackOpts,
+  IDisposableLike,
+  IOpenExternalFeedbackForm,
+  IScheduleFeedbackChecksApi,
+} from "./types";
 
 // Expected API
 import { scheduleFeedbackChecks as _scheduleFeedbackChecks } from "./scheduler";
 export function scheduleFeedbackChecks(
   feedbackContext: IFeedbackContext,
-  opts: IFeedbackOpts,
+  opts: IFeedbackOpts
 ): Promise<IDisposableLike> {
   const vscodeApi: IScheduleFeedbackChecksApi = {
     windowShowInformationMessage: window.showInformationMessage,
-    openExternalFeedbackForm
+    openExternalFeedbackForm,
   };
   return _scheduleFeedbackChecks(vscodeApi, feedbackContext, opts);
 }
@@ -36,11 +42,10 @@ export function scheduleFeedbackChecks(
  * @param feedbackFormUrl
  */
 export const openExternalFeedbackForm: IOpenExternalFeedbackForm =
-  async function(feedbackFormUrl: string): Promise<boolean>
-{
-  const successful = await env.openExternal(Uri.parse(feedbackFormUrl));
-  return successful;
-}
+  async function (feedbackFormUrl: string): Promise<boolean> {
+    const successful = await env.openExternal(Uri.parse(feedbackFormUrl));
+    return successful;
+  };
 
 // To support upgrade scenarios or authors choosing to ignore prior feedback history
 export { clearStorage } from "./state";

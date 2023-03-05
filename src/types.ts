@@ -1,14 +1,16 @@
-import { Memento } from "vscode";
+import type { Memento } from "vscode";
 
 export interface IScheduleFeedbackChecksApi {
-  windowShowInformationMessage: IShowInformationMessageLike,
-  openExternalFeedbackForm: IOpenExternalFeedbackForm
+  windowShowInformationMessage: IShowInformationMessageLike;
+  openExternalFeedbackForm: IOpenExternalFeedbackForm;
 }
 
 // Support mocking vscode.window.showInformationMessage
 export interface IShowInformationMessageLike {
   (message: string, ...items: string[]): Thenable<string | undefined>;
-  (message: string, options: any, ...items: string[]): Thenable<string | undefined>;
+  (message: string, options: any, ...items: string[]): Thenable<
+    string | undefined
+  >;
   // (message: string, ...items: string[]): Thenable<string | undefined>;
 }
 export interface IOpenExternalFeedbackForm {
