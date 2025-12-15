@@ -8,7 +8,7 @@ export interface IScheduleFeedbackChecksApi {
 // Support mocking vscode.window.showInformationMessage
 export interface IShowInformationMessageLike {
   (message: string, ...items: string[]): Thenable<string | undefined>;
-  (message: string, options: any, ...items: string[]): Thenable<
+  (message: string, options: unknown, ...items: string[]): Thenable<
     string | undefined
   >;
   // (message: string, ...items: string[]): Thenable<string | undefined>;

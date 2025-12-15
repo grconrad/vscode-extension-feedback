@@ -59,7 +59,7 @@ export function initState(memento: Memento): void {
  */
 function update(
   fieldName: keyof IState,
-  value: any,
+  value: unknown,
   storageKey?: StorageKey
 ): void {
   updateInMemory({ [fieldName]: value });
