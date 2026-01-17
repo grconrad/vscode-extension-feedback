@@ -338,7 +338,7 @@ __metadata:
   resolution: "@grconrad/vscode-extension-feedback@workspace:."
   dependencies:
     "@eslint/js": ^9.39.2
-    "@types/node": ^24.10.4
+    "@types/node": ^25.0.9
     "@types/vscode": ^1.107.0
     "@typescript-eslint/eslint-plugin": ^8.50.0
     "@typescript-eslint/parser": ^8.50.0
@@ -698,12 +698,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^24.10.4":
-  version: 24.10.4
-  resolution: "@types/node@npm:24.10.4"
+"@types/node@npm:^25.0.9":
+  version: 25.0.9
+  resolution: "@types/node@npm:25.0.9"
   dependencies:
-    undici-types: "npm:~7.16.0"
-  checksum: 27db63085116aec2b92a36405ab4e8838eafd361ab05ba043e16b70e58b41572145b8078244aa5fd51b1f80076b2e7422c848c31c5a0df0dc5e20053e24720d3
+    undici-types: ~7.16.0
+  checksum: 0dd245ed1823d32851007da980319af17f9794b0fe4b6b46093cee185e4c3ea033162238d2dc053b4474c1eeb534d47d2679a92907b5e7a27dac0938cb250c7a
   languageName: node
   linkType: hard
 
