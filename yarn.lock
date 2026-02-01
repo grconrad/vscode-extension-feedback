@@ -1064,11 +1064,11 @@ __metadata:
   linkType: hard
 
 "@vitest/coverage-v8@npm:^4.0.15":
-  version: 4.0.17
-  resolution: "@vitest/coverage-v8@npm:4.0.17"
+  version: 4.0.18
+  resolution: "@vitest/coverage-v8@npm:4.0.18"
   dependencies:
     "@bcoe/v8-coverage": ^1.0.2
-    "@vitest/utils": 4.0.17
+    "@vitest/utils": 4.0.18
     ast-v8-to-istanbul: ^0.3.10
     istanbul-lib-coverage: ^3.2.2
     istanbul-lib-report: ^3.0.1
@@ -1078,12 +1078,12 @@ __metadata:
     std-env: ^3.10.0
     tinyrainbow: ^3.0.3
   peerDependencies:
-    "@vitest/browser": 4.0.17
-    vitest: 4.0.17
+    "@vitest/browser": 4.0.18
+    vitest: 4.0.18
   peerDependenciesMeta:
     "@vitest/browser":
       optional: true
-  checksum: b39278d74a552d39f95cca5da6c1ce4e8ca22e9a7f2547a8488d9e4fd8870999b4cc61083e7b41faae0447b3b8fcbbe3f598255128036c608520302dd20c6183
+  checksum: 2a90f27cb624e4f4519d6361e576c27808c08687f6e9b167d9157470721d4fbac6696194709c4c3e0d8a9d80deae005c82e89b59a281a12bc3279fdb89d34e70
   languageName: node
   linkType: hard
 
@@ -1129,6 +1129,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vitest/pretty-format@npm:4.0.18":
+  version: 4.0.18
+  resolution: "@vitest/pretty-format@npm:4.0.18"
+  dependencies:
+    tinyrainbow: ^3.0.3
+  checksum: 7e095a69badfec07db5dc374c9d7f7aa4d0cd9795b508b23c989dbcb7c0d6a06acb35ed01a0f777ab297a99aa6c6a09b4dcca53c097429184ad93606166ec261
+  languageName: node
+  linkType: hard
+
 "@vitest/runner@npm:4.0.17":
   version: 4.0.17
   resolution: "@vitest/runner@npm:4.0.17"
@@ -1164,6 +1173,16 @@ __metadata:
     "@vitest/pretty-format": 4.0.17
     tinyrainbow: ^3.0.3
   checksum: aa9878406cb70ecf1a7d41fb4e96dcd03729426a55e3f0413ae5e7ec0ba39ab23749517d31e1d83e946b92956207ac2688ce711e6c920eab7b473e98d79b8ba2
+  languageName: node
+  linkType: hard
+
+"@vitest/utils@npm:4.0.18":
+  version: 4.0.18
+  resolution: "@vitest/utils@npm:4.0.18"
+  dependencies:
+    "@vitest/pretty-format": 4.0.18
+    tinyrainbow: ^3.0.3
+  checksum: f536bf5700cbf72703b6cd17083f321fef16ce40910c8a7e6a5939bac8dac2a421518ffa0ea825b18d002bb4f0f62c697e971e725cbf55744b56ea748e424c35
   languageName: node
   linkType: hard
 
