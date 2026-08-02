@@ -60,7 +60,7 @@ export function initState(memento: Memento): void {
 function update(
   fieldName: keyof IState,
   value: unknown,
-  storageKey?: StorageKey
+  storageKey?: StorageKey,
 ): void {
   updateInMemory({ [fieldName]: value });
   if (storageKey) {
@@ -88,7 +88,7 @@ export function getFeedbackCheckTimeoutId(): NodeJS.Timeout | null {
 }
 
 export function setFeedbackCheckTimeoutId(
-  timeoutId: NodeJS.Timeout | null
+  timeoutId: NodeJS.Timeout | null,
 ): void {
   update("feedbackCheckTimeoutId", timeoutId);
 }

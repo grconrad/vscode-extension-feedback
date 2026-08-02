@@ -1,6 +1,6 @@
 {
   "name": "@grconrad/vscode-extension-feedback",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Timing based feedback gathering for VS Code extensions",
   "keywords": [
     "vscode",
@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "build": "tsc -b ./",
-    "clean": "rm -rf lib",
+    "clean": "rm -rf coverage lib",
     "dev:all": "yarn && yarn clean && yarn lint && yarn build && yarn test",
     "lint": "eslint 'src/**/*.ts' --ext js,ts",
     "test": "npm-run-all 'test:*'",
@@ -32,21 +32,21 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^26.0.1",
-    "@types/vscode": "^1.107.0",
-    "@typescript-eslint/eslint-plugin": "^8.50.0",
-    "@typescript-eslint/parser": "^8.50.0",
-    "@vitest/coverage-v8": "^4.0.15",
-    "eslint": "^10.0.2",
+    "@types/node": "^26.1.2",
+    "@types/vscode": "^1.125.0",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
+    "@vitest/coverage-v8": "^4.1.10",
+    "eslint": "^10.8.0",
     "npm-run-all": "^4.1.5",
     "ts-node": "^10.9.2",
-    "typescript": "~6.0.2",
-    "typescript-eslint": "^8.50.0",
-    "vitest": "^4.0.15"
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.65.0",
+    "vitest": "^4.1.10"
   },
   "volta": {
-    "node": "24.12.0",
-    "yarn": "4.12.0"
+    "node": "26.5.1",
+    "yarn": "4.18.0"
   },
   "publishConfig": {
     "access": "public"

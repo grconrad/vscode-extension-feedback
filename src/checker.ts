@@ -4,7 +4,12 @@
  * Refactored to support unit tests
  */
 
-import { IFeedbackContext, FeedbackCheckResult, IFeedbackOpts, IScheduleFeedbackChecksApi } from "./types";
+import {
+  IFeedbackContext,
+  FeedbackCheckResult,
+  IFeedbackOpts,
+  IScheduleFeedbackChecksApi,
+} from "./types";
 import {
   getDontAsk,
   getFirstCheckedTime,
@@ -30,28 +35,33 @@ export async function checkForFeedback(
   feedbackContext: IFeedbackContext,
   opts: IFeedbackOpts,
 ): Promise<void> {
-
   const logFn = feedbackContext.logFn;
 
-  const result: FeedbackCheckResult = await checkNow(vscodeApi, feedbackContext, opts);
+  const result: FeedbackCheckResult = await checkNow(
+    vscodeApi,
+    feedbackContext,
+    opts,
+  );
   logFn(`Result of feedback check: ${result}`);
 
   switch (result) {
-  case FeedbackCheckResult.ALREADY_RESPONDED:
-  case FeedbackCheckResult.WONT_ASK:
-  case FeedbackCheckResult.RESPONSE_DONT_ASK:
-  case FeedbackCheckResult.RESPONSE_FEEDBACK:
-    // In these cases, the user has already given feedback or indicated that they won't.
-    // Respect their wishes.
-    // Don't schedule another check.
-    setFeedbackCheckTimeoutId(null);
-    return;
+    case FeedbackCheckResult.ALREADY_RESPONDED:
+    case FeedbackCheckResult.WONT_ASK:
+    case FeedbackCheckResult.RESPONSE_DONT_ASK:
+    case FeedbackCheckResult.RESPONSE_FEEDBACK:
+      // In these cases, the user has already given feedback or indicated that they won't.
+      // Respect their wishes.
+      // Don't schedule another check.
+      setFeedbackCheckTimeoutId(null);
+      return;
   }
 
   // If we made it here, we haven't heard from the user.
   // Go ahead and schedule the next check.
   const checkInterval = opts.timings!.checkInterval!;
-  logFn(`Next feedback check scheduled for ${new Date(Date.now() + checkInterval).toISOString()}`);
+  logFn(
+    `Next feedback check scheduled for ${new Date(Date.now() + checkInterval).toISOString()}`,
+  );
   const feedbackCheckTimeoutId = setTimeout(() => {
     checkForFeedback(vscodeApi, feedbackContext, opts);
   }, checkInterval);
@@ -73,13 +83,11 @@ export async function checkForFeedback(
 export async function checkNow(
   vscodeApi: IScheduleFeedbackChecksApi,
   feedbackContext: IFeedbackContext,
-  opts: IFeedbackOpts
+  opts: IFeedbackOpts,
 ): Promise<FeedbackCheckResult> {
-
-  const {logFn} = feedbackContext;
+  const { logFn } = feedbackContext;
 
   try {
-
     // Read persisted state.
 
     // If user has already provided feedback, don't ask anymore.
@@ -113,13 +121,19 @@ export async function checkNow(
     const lastAskedTime = getLastAskedTime();
     const { firstAskInterval, reminderInterval } = opts.timings!;
 
-    if (lastAskedTime === undefined && ((checkTime - firstCheckedTime) < firstAskInterval!)) {
+    if (
+      lastAskedTime === undefined &&
+      checkTime - firstCheckedTime < firstAskInterval!
+    ) {
       // We've never asked for feedback, but it's too soon for the first ask.
       logFn("Skipping feedback prompt (too soon for first ask)");
       return FeedbackCheckResult.TOO_SOON;
     }
 
-    if (lastAskedTime !== undefined && ((checkTime - lastAskedTime) < reminderInterval!)) {
+    if (
+      lastAskedTime !== undefined &&
+      checkTime - lastAskedTime < reminderInterval!
+    ) {
       // We've asked for feedback before, but it's too soon for a reminder.
       logFn("Skipping feedback prompt (too soon for reminder)");
       return FeedbackCheckResult.TOO_SOON;
@@ -135,8 +149,7 @@ export async function checkNow(
       updateLastFeedbackTime(Date.now());
     }
     return result;
-  }
-  catch (e) {
+  } catch (e) {
     logFn("Error in feedback check");
     console.error(e);
     return FeedbackCheckResult.ERROR;
